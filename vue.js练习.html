@@ -7,7 +7,7 @@
 </head>
 <body v-cloak>
 	<div class="app">{{message}}</div>
-	<p v-cloak id="app-3" v-if="cansee">you can see me</p>
+	<p v-cloak id="app-3" v-if="seen">you can see me</p>
 
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
 	<script>
@@ -20,7 +20,7 @@
 		var app3 = new Vue({
 			el: '#app-3',
 			data: {
-				cansee: true
+				seen: true
 			}
 		})
 	</script>
