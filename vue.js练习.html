@@ -7,17 +7,22 @@
 </head>
 <body v-cloak>
 	<div class="app">{{message}}</div>
-	<p class="p" v-if="cansee">you can see me</p>
+	<p v-cloak id="app-3" v-if="cansee">you can see me</p>
 
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
 	<script>
-       var apps = new Vue({
-       	el:'.app',
-       	data:{
-       		message:'Hello Vue!'
-       	}
-       })
-       apps.cansee = false;
+		var apps = new Vue({
+			el:'.app',
+			data:{
+				message:'Hello Vue!'
+			}
+		})
+		var app3 = new Vue({
+			el: '#app-3',
+			data: {
+				cansee: true
+			}
+		})
 	</script>
 </body>
 </html>
