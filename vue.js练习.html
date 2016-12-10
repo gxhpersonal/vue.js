@@ -6,8 +6,31 @@
 	<title>Document</title>
 </head>
 <body v-cloak>
+
+	<style>
+		.slide-enter-active, .slide-leave-active {
+			transition: color .5s,opacity .5s;
+		}
+		.slide-enter, .slide-leave-active {
+			color: green;
+			opacity: 0;
+		}
+		#toggle{
+			margin-top: 10px;
+		}
+	</style>
+
 	<div class="app">{{message}}</div>
 	<p v-cloak id="app-3" v-if="seen">you can see me</p>
+	<a id="app4" v-bind:href="link" v-bind:style="style" >this is a link to hzc</a>
+	<div id="toggle">
+	  <button v-on:click="show=!show">toggle</button>
+	  <transition name=slide>
+          <h1 v-if="show">see/nosee</h1>
+	  </transition>
+	
+	</div>
+	
 
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
 	<script>
@@ -21,6 +44,19 @@
 			el: '#app-3',
 			data: {
 				seen: true
+			}
+		})
+		var app4 = new Vue({
+			el:'#app4',
+			data:{
+				link:"http://www.huizuche.com",
+				style:"color:red"
+			}
+		})
+		var app5 = new Vue({
+			el:"#toggle",
+			data:{
+                show:true
 			}
 		})
 	</script>
