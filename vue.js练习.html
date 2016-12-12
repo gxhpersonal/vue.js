@@ -30,7 +30,7 @@
 		</transition>
 	</div>
 
-	<div class="static" v-bind:class="{ active: isActive, 'text-danger': hasError }"></div>
+	<div class="static" v-bind:class="{ active: isActive, 'text-danger': hasError }">class true or false</div>
 	
 
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
@@ -60,11 +60,14 @@
 				show:true
 			}
 		})
-
-		data: {
+        var app6 = new Vue({
+        	el:".static",
+        	data:{
 			isActive: true,
 			hasError: false
 		}
+        })
+		
 	</script>
 </body>
 </html>
