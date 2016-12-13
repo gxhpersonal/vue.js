@@ -17,7 +17,8 @@
 		}
 		#toggle{
 			margin-top: 10px;
-		}
+			height: 132px;
+		}		
 	</style>
 
 	<div class="app">{{message}}</div>
@@ -28,6 +29,7 @@
 		<transition name=slide>
 			<h1 v-if="show">see/nosee</h1>
 		</transition>
+		<h1 style="visibility:hidden">you no see me</h1>
 	</div>
 
 	<div class="static" v-bind:class="{ active: isActive, 'text-danger': hasError }">class true or false</div>
@@ -70,6 +72,17 @@
 			isActive: true,
 			hasError: false
 		}
+        })
+
+        var app7 = new Vue({
+            el:"#app7",
+            data:{
+            	todos:[
+                   {text:'this is vue'},
+                   {text:'this is vue2'},
+                   {text:'this is vueapp7'}
+            	]
+            }
         })
 		
 	</script>
