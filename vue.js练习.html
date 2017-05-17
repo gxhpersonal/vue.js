@@ -23,16 +23,16 @@
 
 	<div class="app">{{message}}</div>
 	<p v-cloak id="app-3" v-if="seen">you can see me</p>
-	<a id="app4" v-bind:href="link" v-bind:style="style" >this is a link to hzc</a>
+	<a id="app4" :href="link" :style="style" >this is a link to hzc</a>
 	<div id="toggle">
-		<button v-on:click="show=!show">toggle</button>
+		<button @click="show=!show">toggle</button>
 		<transition name=slide>
 			<h1 v-if="show">see/nosee</h1>
 		</transition>
 		<h1 style="visibility:hidden">you no see me</h1>
 	</div>
 
-	<div class="static" v-bind:class="{ active: isActive, 'text-danger': hasError }">class true or false</div>
+	<div class="static" :class="{ active: isActive, 'text-danger': hasError }">class true or false</div>
 	<div id="app7">
 		<ol>
 			<li v-for="todo in todos">{{todo.text}}</li>
@@ -40,7 +40,7 @@
 	</div>
 	<div id="app8">
 		<p>{{ message }}</p>
-		<button v-on:click="reverseMessage">Reverse Message</button>
+		<button @click="reverseMessage">Reverse Message</button>
 	</div>
 
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
