@@ -1,106 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<title>vue</title>
 </head>
-<body v-cloak>
+
+<body>
 
 	<style>
-		.slide-enter-active, .slide-leave-active {
-			transition: color .5s,opacity .5s;
+		[v-cloak] {
+			display: none;
 		}
-		.slide-enter, .slide-leave-active {
+
+		.slide-enter-active,
+		.slide-leave-active {
+			transition: color .5s, opacity .5s;
+		}
+
+		.slide-enter,
+		.slide-leave-active {
 			color: green;
 			opacity: 0;
 		}
-		#toggle{
+
+		#toggle {
 			margin-top: 10px;
 			height: 132px;
 		}
 	</style>
 
-	<div class="app">{{message}}</div>
-	<p v-cloak id="app-3" v-if="seen">you can see me</p>
-	<a id="app4" :href="link" :style="style" >this is a link to hzc</a>
-	<div id="toggle">
-		<button @click="show=!show">toggle</button>
-		<transition name=slide>
-			<h1 v-if="show">see/nosee</h1>
-		</transition>
-		<h1 style="visibility:hidden">you no see me</h1>
-	</div>
+	<div class="wrap" id="app" v-cloak>
+		<div>{{message}}</div>
+		<p v-cloak v-if="seen">you can see me</p>
+		<a :href="link" :style="style">this is a link to hzc</a>
+		<div id="toggle">
+			<button @click="show=!show">toggle</button>
+			<transition name=slide>
+				<h1 v-if="show">see/nosee</h1>
+			</transition>
+			<h1 style="visibility:hidden">you no see me</h1>
+		</div>
 
-	<div class="static" :class="{ active: isActive, 'text-danger': hasError }">class true or false</div>
-	<div id="app7">
-		<ol>
-			<li v-for="todo in todos">{{todo.text}}</li>
-		</ol>
-	</div>
-	<div id="app8">
-		<p>{{ message }}</p>
-		<button @click="reverseMessage">Reverse Message</button>
+		<div class="static" :class="{ active: isActive, 'text-danger': hasError }">class true or false</div>
+		<div>
+			<ol>
+				<li v-for="todo in todos">{{todo.text}}</li>
+			</ol>
+		</div>
+		<div>
+			<p>{{ message }}</p>
+			<button @click="reverseMessage">Reverse Message</button>
+
+			<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+			<label for="jack">Jack</label>
+			<input type="checkbox" id="john" value="John" v-model="checkedNames">
+			<label for="john">John</label>
+			<input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+			<label for="mike">Mike</label>
+			<br>
+			<span>Checked names: {{checkedNames}}</span>
+		</div>
 	</div>
 
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
 	<script>
-		var apps = new Vue({       //换个写法定义变量
-			el:'.app',
-			data:{
-				message:'Hello Vue!'
-			}
-		})
-		var app3 = new Vue({
-			el: '#app-3',
-			data: {
-				seen: true
-			}
-		})
-		var app4 = new Vue({
-			el:'#app4',
-			data:{
-				link:"http://www.huizuche.com",
-				style:"color:red"
-			}
-		})
-		var app5 = new Vue({
-			el:"#toggle",
-			data:{
-				show:true
-			}
-		})
-		var app6 = new Vue({
-			el:".static",
-			data:{
-				isActive: true,
-				hasError: false
-			}
-		})
-
-		var app7 = new Vue({
-			el:"#app7",
-			data:{
-				todos:[
-				{text:'this is vue'},
-				{text:'this is vue2'},
-				{text:'this is vueapp7'}
-				]
-			}
-		})
-
-		var app8 = new Vue({
-			el:"#app8",
-			data: {
-				message: 'Hello Vue.js!'
+		let apps = new Vue({
+			el: '#app',
+			data() {
+				return {
+					message: 'Hello Vue!',
+					checkedNames: 'default',
+					todos: {
+						text: "this is test",
+						text: 'this is test',
+						text: 'this is test'
+					},
+					show: false,
+					seen: true,
+					isActive: true,
+					hasError: false,
+					link: 'http://www.huizuche.com',
+					style: 'color:blue',
+				}
 			},
 			methods: {
 				reverseMessage: function () {
-					this.message = this.message.split('').reverse().join('')
+					this.message = this.message.split('').reverse().join('');
 				}
+			},
+			mounted() {
+				this.message = 'hello surprise';
 			}
 		})
-		
 	</script>
 </body>
+
 </html>
