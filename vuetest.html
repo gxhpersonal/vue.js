@@ -260,7 +260,7 @@
 				that.GetMap('31.19', '121.70');
 				//头部浮动
 				window.onscroll = function () {
-					var scrollTop = window.document.documentElement.scrollTop;
+					var scrollTop = window.document.body.scrollTop;
 					// console.log(scrollTop)
 					if (scrollTop > 50) {
 						that.styles = "-webkit-transform:translate3d(0,-50px,0)";
