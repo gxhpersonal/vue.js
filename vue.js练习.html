@@ -5,13 +5,49 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<title>vue</title>
+	<link rel="stylesheet" href="mapbox.css">
+	<script src="mapbox.js"></script>
 </head>
 
 <body>
 
 	<style>
+		body {
+			margin: 0;
+		}
+
 		[v-cloak] {
 			display: none;
+		}
+
+		.bar-wrap {
+			width: 100%;
+			position: fixed;
+			transition: transform 500ms ease-in-out;
+			transform: translate3d(0, 0, 0);
+			z-index: 1001;
+		}
+
+		.bar-top {
+			display: flex;
+			display: -webkit-flex;
+			align-items: center;
+			justify-content: center;
+			height: 50px;
+			background-color: palegreen;
+		}
+
+		.bar-bottom {
+			display: flex;
+			display: -webkit-flex;
+			align-items: center;
+			justify-content: center;
+			height: 50px;
+			background-color: purple;
+		}
+
+		.bar-bot {
+			height: 100px;
 		}
 
 		.slide-enter-active,
@@ -29,54 +65,137 @@
 			margin-top: 10px;
 			height: 132px;
 		}
+
+		#mapDiv {
+			width: 100%;
+			height: 210px;
+			position: relative;
+		}
+
+		.poi-icon {
+			background-image: url(http://cdn.qiniu.activity.huizuche.com/poi@2x.png);
+			background-size: 18px 23px;
+		}
+
+		.angle-wrap {
+			position: relative;
+			margin-left: 10px;
+			transition: transform 300ms ease-in-out;
+			display: inline-block;
+			width: 10px;
+			height: 8px;
+		}
+
+		.angle-wrap-p:hover .angle-wrap {
+			transform: rotate(180deg);
+			transform-origin: 50% 50%;
+		}
+
+		.angle,
+		.inner {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 0;
+			height: 0;
+			border-style: solid;
+			border-color: rgba(0, 0, 0, 0);
+		}
+
+		.angle {
+			border-width: 5px 5px 0;
+			border-top-color: #000;
+			top: 2px;
+		}
+
+		.inner {
+			border-width: 5px 5px 0;
+			border-top-color: #fff;
+		}
+
+		.list-enter,
+		.list-leave-to {
+			transform: translateY(30px);
+			opacity: 0;
+		}
+
+		.item {
+			display: inline-block;
+			margin-left: 5px;
+			transition: all 1s;
+		}
 	</style>
 
 	<div class="wrap" id="app" v-cloak>
+		<div class="bar-wrap" :style="styles">
+			<div class="bar-top">top</div>
+			<div class="bar-bottom">bottom</div>
+		</div>
+		<div class="bar-bot"></div>
+		<div class="rs-map" id="mapDiv"></div>
 		<div>{{message}}</div>
-		<p v-cloak v-if="seen">you can see me</p>
+		<div id="list-complete-demo" class="demo">
+			<button v-on:click="shuffle">Shuffle</button>
+			<button v-on:click="add">add</button>
+			<button v-on:click="remove">remove</button>
+			<transition-group name="list" tag="p">
+				<span v-for="item in items" v-bind:key="item" class="item">
+					{{ item }}
+				</span>
+			</transition-group>
+		</div>
+		<p class="angle-wrap-p" v-cloak v-if="seen" style="display:flex;align-items:baseline;">you can see me<span class="angle-wrap"><i class="angle"></i><em class="inner"></em></span></p>
 		<a :href="link" :style="style">this is a link to hzc</a>
 		<div id="toggle">
 			<button @click="show=!show">toggle</button>
 			<transition name=slide>
-				<h1 v-if="show">see/nosee</h1>
+				<h1 v-show="show">see/nosee</h1>
 			</transition>
 			<h1 style="visibility:hidden">you no see me</h1>
-		</div>
+			</transition>
 
-		<div class="static" :class="{ active: isActive, 'text-danger': hasError }">class true or false</div>
-		<div>
-			<ol>
-				<li v-for="todo in todos">{{todo.text}}</li>
-			</ol>
-		</div>
-		<div>
-			<p>{{ message }}</p>
-			<button @click="reverseMessage">Reverse Message</button>
+			<div class="static" :class="{ active: isActive, 'text-danger': hasError }" @contextmenu.prevent='rightClick'>class true or false</div>
+			<div>
+				<ol>
+					<li v-for="(todo,index) in todos">{{todo.text}} {{index}}</li>
+					<div v-for="v in 10">{{v}}</div>
+				</ol>
+			</div>
+			<div>
+				<p>{{ message }}</p>
+				<button @click="reverseMessage">Reverse Message</button>
 
-			<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
-			<label for="jack">Jack</label>
-			<input type="checkbox" id="john" value="John" v-model="checkedNames">
-			<label for="john">John</label>
-			<input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
-			<label for="mike">Mike</label>
-			<br>
-			<span>Checked names: {{checkedNames}}</span>
+				<div v-for='v in people'>
+					<input type="checkbox" id="jack" :value="v.name" v-model="checkedNames">
+					<label>{{v.name}}</label>
+				</div>
+				<br>
+				<span>Checked names: {{checkedNames}}</span>
+			</div>
 		</div>
 	</div>
-
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.14.1/lodash.min.js"></script>
 	<script>
-		let apps = new Vue({
+		var apps = new Vue({
 			el: '#app',
 			data() {
 				return {
+					styles: "-webkit-transform:translate3d(0,0,0)",
+					items: [1, 2, 3, 4, 5, 6, 7, 8, 9],
 					message: 'Hello Vue!',
-					checkedNames: 'default',
-					todos: {
-						text: "this is test",
-						text: 'this is test',
-						text: 'this is test'
-					},
+					num: 10,
+					checkedNames: [],
+					todos: [
+						{ text: "this is test1" },
+						{ text: 'this is test2' },
+						{ text: 'this is test3' }
+					],
+					people: [
+						{ name: 'jack' },
+						{ name: "john" },
+						{ name: 'mike' }
+					],
 					show: false,
 					seen: true,
 					isActive: true,
@@ -88,10 +207,51 @@
 			methods: {
 				reverseMessage: function () {
 					this.message = this.message.split('').reverse().join('');
+				},
+				shuffle: function () {
+					this.items = _.shuffle(this.items)
+				},
+				random: function () {
+					return Math.floor(Math.random() * this.items.length)
+				},
+				add: function () {
+					this.items.splice(this.random(), 0, this.num++);
+				},
+				remove: function () {
+					this.items.splice(this.random(), 1)
+				},
+				rightClick: function () {
+					alert('您点击的是鼠标右键')
+				},
+				//获得地图
+				GetMap: function (lan, lon) {
+					var mapbox;
+					L.mapbox.accessToken = 'pk.eyJ1IjoidGFuZ2ppb24iLCJhIjoiY2l4MDZtcjM4MDJjNDJ5cHJiNzZic3l0NyJ9.GUhh2Go4d_oihLmA_AFbFQ';
+					if (mapbox != undefined) { mapbox.remove(); }
+					mapbox = L.mapbox.map('mapDiv', 'mapbox.streets').setView([lan, lon], 13);
+					var myIcon = L.divIcon({
+						className: 'poi-icon',
+						iconSize: [18, 23]
+					});
+
+					L.marker([lan, lon], { icon: myIcon }).addTo(mapbox);
 				}
 			},
 			mounted() {
-				this.message = 'hello surprise';
+				var that = this;
+				that.message = 'hello surprise';
+				//默认调用地图参数1纬度，2经度；
+				that.GetMap('31.19', '121.70');
+				//头部浮动
+				window.onscroll = function () {
+					var scrollTop = window.document.documentElement.scrollTop;
+					// console.log(scrollTop)
+					if (scrollTop > 50) {
+						that.styles = "-webkit-transform:translate3d(0,-50px,0)";
+					} else {
+						that.styles = "-webkit-transform:translate3d(0,0,0)";
+					}
+				}
 			}
 		})
 	</script>
